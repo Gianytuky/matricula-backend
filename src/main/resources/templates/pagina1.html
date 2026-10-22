@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Cursos de Extension</title>
+</head>
+<body>
+
+    <h2 style="text-align: center;">Cursos de Extension</h2>
+
+    <div style="text-align: center; margin-bottom: 15px;">
+        <form action="/especial" method="get">
+            <label style="font-weight: bold;">Seleccione Especialidad </label>
+            <select name="codesp" onchange="this.form.submit()">
+                <option value="">--Seleccione--</option>
+                <option th:each="p : ${lisesp}"
+                        th:value="${p.code}"
+                        th:text="${p.nomes}"
+                        th:selected="${p.code.equals(elegido)}">
+                </option>
+            </select>
+        </form>
+    </div>
+
+    <table border="1" align="center" style="border-collapse: collapse; width: 70%; text-align: center;">
+        <thead style="background-color: #ddd;">
+            <tr>
+                <th>Codigo</th>
+                <th>ASignatura</th>
+                <th>Costo</th>
+                <th>Vacantes</th>
+                <th>Matricula</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="c : ${cursos}">
+                <td th:text="${c.codcur}">C0002</td>
+                <td th:text="${c.nomcur}">Visual Basic</td>
+                <td th:text="${#numbers.formatDecimal(c.costo, 0, 'POINT', 0, 'POINT')}">300</td>
+                <td th:text="${c.nrovac}">14</td>
+                <td>
+                    <a th:href="@{/alumnos/{id}(id=${c.codcur})}">Alumnos</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+</body>
+</html>

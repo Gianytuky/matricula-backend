@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Matricula de Alumnos</title>
+</head>
+<body>
+
+    <h2 style="text-align: center;">Matricula de Alumnos</h2>
+
+    <div style="width: 50%; margin: 0 auto 20px auto;">
+        <form th:action="@{/adiciona}" th:object="${alumno}" method="post">
+            <input type="hidden" th:field="*{codcur}" />
+
+            <table style="width: 100%; border-spacing: 8px;">
+                <tr>
+                    <td><strong>Nombres y Apellidos</strong></td>
+                    <td><input type="text" th:field="*{apenom}" style="width: 90%;" required /></td>
+                </tr>
+                <tr>
+                    <td><strong>Tipo de Alumno</strong></td>
+                    <td>
+                        <select th:field="*{tipo}" id="tipoSelect" onchange="calcularPago()" style="width: 95%;" required>
+                            <option value="">--seleccione--</option>
+                            <option value="1">1/2 Beca</option>
+                            <option value="2">1/4 Beca</option>
+                            <option value="3">Regular</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td><strong>Pago</strong></td>
+                    <td>
+                        <input type="number" step="0.01" th:field="*{pago}" id="pagoInput" readonly style="width: 90%;" />
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2" style="text-align: center; padding-top: 10px;">
+                        <button type="submit">Grabar Reg</button>
+                        <a th:href="@{/especial}" style="margin-left: 15px; text-decoration: none; font-weight: bold; color: black; border: 1px solid #777; padding: 2px 8px; background-color: #eee;">Retornar</a>
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </div>
+
+    <div th:if="${mensaje}" style="text-align: center; color: green; font-weight: bold; margin-bottom: 10px;">
+        <span th:text="${mensaje}"></span>
+    </div>
+
+    <!-- Encabezado con datos dinámicos del curso seleccionado -->
+    <p style="width: 70%; margin: 0 auto 5px auto; font-size: 1.1em;">
+        Lista de Alumnos del Curso <strong th:text="${curso.nomcur}">Visual Net</strong> 
+        Costo <strong th:text="${#numbers.formatDecimal(curso.costo, 0, 'POINT', 0, 'POINT')}">500</strong>
+    </p>
+
+    <table border="1" align="center" style="border-collapse: collapse; width: 70%; text-align: center;">
+        <thead style="background-color: #d0d0f0;">
+            <tr>
+                <th>Nro Matricula</th>
+                <th>Nombre y Apellido</th>
+                <th>Tipo</th>
+                <th>Pago</th>
+                <th>Anular</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="c : ${listaAlumnos}">
+                <td th:text="${c.nromat}">A00002</td>
+                <td th:text="${c.apenom}">Herrera Hidalgo, Marlon</td>
+                <td th:text="${c.ctipo}">Regular</td>
+                <td th:text="${#numbers.formatDecimal(c.pago, 0, 'POINT', 0, 'POINT')}">120</td>
+                <td>
+                    <a th:href="@{'/borra/' + ${c.nromat}}"
+                       onclick="return confirm('¿Seguro de eliminar este alumno?');">
+                        Elimina
+                    </a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <script th:inline="javascript">
+        function calcularPago() {
+            const costo = /*[[${curso.costo}]]*/ 0;
+            const tipo = document.getElementById("tipoSelect").value;
+            let pago = costo;
+
+            if (tipo === "1") {
+                pago = costo * 0.5;
+            } else if (tipo === "2") {
+                pago = costo * 0.75;
+            } else {
+                pago = costo;
+            }
+
+            document.getElementById("pagoInput").value = pago.toFixed(2);
+        }
+    </script>
+
+</body>
+</html>
