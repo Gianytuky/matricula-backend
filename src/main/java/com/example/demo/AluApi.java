@@ -24,7 +24,7 @@ import com.example.demo.servicio.ProceServicio;
 
 @RestController
 @RequestMapping("/api/v1")
-@CrossOrigin(origins = "http://localhost:4200", maxAge = 3600)
+@CrossOrigin(origins = "*", maxAge = 3600)
 public class AluApi {
 
     @Autowired
